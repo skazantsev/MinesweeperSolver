@@ -46,7 +46,7 @@ namespace MinesweeperSolver.Presentation
         public void Handle(GameCannotBeFound @event)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Cannot find a minersweeper window.");
+            Console.WriteLine("Cannot find a minesweeper window.");
             Console.ResetColor();
         }
 

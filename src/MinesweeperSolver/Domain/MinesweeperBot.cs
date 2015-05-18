@@ -1,4 +1,5 @@
-﻿using MinesweeperSolver.Common.BclExtensions;
+﻿using System.Collections.Generic;
+using MinesweeperSolver.Common.BclExtensions;
 using MinesweeperSolver.Common.Constants;
 using MinesweeperSolver.Common.Enums;
 using MinesweeperSolver.Common.Events;
@@ -16,7 +17,7 @@ namespace MinesweeperSolver.Domain
 {
     public class MinesweeperBot
     {
-        private static readonly string[] PredefinedWindowNames = { "Miner", "Minesweeper" };
+        private string[] _gameWindowNames;
 
         private IntPtr _minesweeperWindow;
         private Map _map;
@@ -24,8 +25,9 @@ namespace MinesweeperSolver.Domain
 
         public bool IsStarted { get; private set; }
 
-        public void Start(GameOptions gameOptions)
+        public void Start(GameOptions gameOptions, string[] gameWindowNames)
         {
+            _gameWindowNames = gameWindowNames;
             _minesweeperWindow = GetMinesweeperWindowPtr();
             _map = new Map(gameOptions.Height, gameOptions.Width);
             _solver = new GameSolver(_map, gameOptions.Mines);
@@ -62,11 +64,11 @@ namespace MinesweeperSolver.Domain
             _minesweeperWindow = IntPtr.Zero;
         }
 
-        private static IntPtr GetMinesweeperWindowPtr()
+        private IntPtr GetMinesweeperWindowPtr()
         {
-            foreach (var windowName in PredefinedWindowNames)
+            foreach (var wndName in _gameWindowNames)
             {
-                var hWnd = WinApiHelper.FindWindow(null, windowName);
+                var hWnd = WinApiHelper.FindWindow(null, wndName);
                 if (hWnd != IntPtr.Zero)
                     return hWnd;
             }

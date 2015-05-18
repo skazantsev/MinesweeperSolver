@@ -13,9 +13,13 @@ namespace MinesweeperSolver.Commands
 {
     public class StartBotCommand : CommandWithOptionsBase
     {
+        private static readonly string[] PredefinedMinesweeperNames = { "Minesweeper" };
+
         private readonly IMinesweeperBotFactory _botFactory;
 
         private GameOptions _gameOptions;
+
+        private string _windowName;
 
         public StartBotCommand(IMinesweeperBotFactory botFactory)
         {
@@ -33,10 +37,10 @@ namespace MinesweeperSolver.Commands
             {
                 return "starts minesweeper solving\r\n" +
                        "    usage:\r\n" +
-                       "\t* start beginner\r\n" +
-                       "\t* start intermediate\r\n" +
-                       "\t* start expert\r\n" +
-                       "\t* start custom <height> <width> <mines>";
+                       "\t* start beginner <window_name>\r\n" +
+                       "\t* start intermediate <window_name>\r\n" +
+                       "\t* start expert <window_name>\r\n" +
+                       "\t* start custom <height> <width> <mines> <window_name>";
             }
         }
 
@@ -60,10 +64,12 @@ namespace MinesweeperSolver.Commands
                     throw new InvalidCommandOptionsException("Cannot parse parameters for custom mode. Integers are required.");
 
                 _gameOptions = GameOptions.BuildCustom(height, width, mines);
+                _windowName = inputOptions.Count > 4 ? inputOptions[4] : null;
             }
             else
             {
                 _gameOptions = GameOptions.GetPredefined(gameMode);
+                _windowName = inputOptions.Count > 1 ? inputOptions[1] : null;
             }
         }
 
@@ -78,7 +84,10 @@ namespace MinesweeperSolver.Commands
 
             try
             {
-                minesweeperBot.Start(_gameOptions);
+                var minesweeperWindowNames = !string.IsNullOrEmpty(_windowName)
+                    ? new[] {_windowName}.Concat(PredefinedMinesweeperNames).ToArray()
+                    : PredefinedMinesweeperNames;
+                minesweeperBot.Start(_gameOptions, minesweeperWindowNames);
                 DomainEvents.Raise(new BotStarted());
             }
             catch (WindowCannotBeFoundException)
