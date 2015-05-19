@@ -40,48 +40,29 @@ namespace MinesweeperSolver.Domain
 
         public int GetAdjacentCellCountOfState(Cell cell, params CellState[] states)
         {
-            return GetAdjacentCellCountOfState(cell.Row, cell.Col, states);
-        }
-
-        private int GetAdjacentCellCountOfState(int row, int col, params CellState[] states)
-        {
-            return GetAdjacentCells(row, col).Count(x => states.Any(s => s == x.State));
+            return GetAdjacentCells(cell).Count(x => states.Any(s => s == x.State));
         }
 
         public List<Cell> GetAdjacentCells(Cell cell, Func<Cell, bool> predicate)
         {
-            return GetAdjacentCells(cell.Row, cell.Col).Where(predicate).ToList();
+            return GetAdjacentCells(cell).Where(predicate).ToList();
         }
 
-        public List<Cell> GetAdjacentCells(Cell cell)
+        private IEnumerable<Cell> GetAdjacentCells(Cell cell)
         {
-            return GetAdjacentCells(cell.Row, cell.Col);
-        }
+            var row = cell.Row;
+            var col = cell.Col;
+            var adjacency = Enumerable.Range(-1, 3)
+                .SelectMany(x => Enumerable.Range(-1, 3), (x, y) => new {dx = x, dy = y})
+                .Where(p => p.dx != 0 || p.dy != 0);
 
-        // TODO: Simplify this method
-        // http://stackoverflow.com/a/2373480/883623
-        private List<Cell> GetAdjacentCells(int row, int col)
-        {
-            var adjacentCells = new List<Cell>();
+            foreach (var adj in adjacency)
+            {
+                if (0 <= row + adj.dx && row + adj.dx < _rowCount &&
+                    0 <= col + adj.dy && col + adj.dy < _colCount)
+                    yield return _gameField[row + adj.dx, col + adj.dy];
+            }
 
-            if (row != 0)
-                adjacentCells.Add(_gameField[row - 1, col]);
-            if (row != 0 && col != _colCount - 1)
-                adjacentCells.Add(_gameField[row - 1, col + 1]);
-            if (col != _colCount - 1)
-                adjacentCells.Add(_gameField[row, col + 1]);
-            if (row != _rowCount - 1 && col != _colCount - 1)
-                adjacentCells.Add(_gameField[row + 1, col + 1]);
-            if (row != _rowCount - 1)
-                adjacentCells.Add(_gameField[row + 1, col]);
-            if (row != _rowCount - 1 && col != 0)
-                adjacentCells.Add(_gameField[row + 1, col - 1]);
-            if (col != 0)
-                adjacentCells.Add(_gameField[row, col - 1]);
-            if (row != 0 && col != 0)
-                adjacentCells.Add(_gameField[row - 1, col - 1]);
-
-            return adjacentCells;
         }
     }
 }
