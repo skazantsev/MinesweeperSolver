@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Drawing;
 using MinesweeperSolver.Common.BclExtensions;
 using MinesweeperSolver.Common.Constants;
 using MinesweeperSolver.Common.Enums;
@@ -17,6 +17,29 @@ namespace MinesweeperSolver.Domain
 {
     public class MinesweeperBot
     {
+        private static readonly KeyValueList<ColorPoint, CellState> CellStateDeterminationList = new KeyValueList<ColorPoint, CellState>
+        {
+            {ColorPoint.Create(c => Coords.ColToCoord(c), r => Coords.RowToCoord(r), Color.FromArgb(255, 0, 0)), CellState.Boom },
+
+            {ColorPoint.Create(c => Coords.ColToCoord(c, 7), r => Coords.RowToCoord(r, 8), Color.FromArgb(0, 0, 255)), CellState.One },
+
+            {ColorPoint.Create(c => Coords.ColToCoord(c, 7), r => Coords.RowToCoord(r, 8), Color.FromArgb(0, 128, 0)), CellState.Two },
+
+            {ColorPoint.Create(c => Coords.ColToCoord(c, 10), r => Coords.RowToCoord(r, 8), Color.FromArgb(255, 0, 0)), CellState.Three },
+
+            {ColorPoint.Create(c => Coords.ColToCoord(c, 10), r => Coords.RowToCoord(r, 8), Color.FromArgb(0, 0, 128)), CellState.Four },
+
+            {ColorPoint.Create(c => Coords.ColToCoord(c, 10), r => Coords.RowToCoord(r, 8), Color.FromArgb(128, 0, 0)), CellState.Five },
+
+            {ColorPoint.Create(c => Coords.ColToCoord(c, 10), r => Coords.RowToCoord(r, 8), Color.FromArgb(0, 128, 128)), CellState.Six },
+
+            {ColorPoint.Create(c => Coords.ColToCoord(c, 3), r => Coords.RowToCoord(r, 2), Color.FromArgb(0, 0, 0)), CellState.Seven },
+
+            {ColorPoint.Create(c => Coords.ColToCoord(c, 10), r => Coords.RowToCoord(r, 8), Color.FromArgb(128, 128, 128)), CellState.Eight },
+
+            {ColorPoint.Create(c => Coords.ColToCoord(c), r => Coords.RowToCoord(r), Color.FromArgb(192, 192, 192)), CellState.Empty }
+        };
+
         private string[] _gameWindowNames;
 
         private IntPtr _minesweeperWindow;
@@ -105,15 +128,15 @@ namespace MinesweeperSolver.Domain
         private void MineHasBeenFoundHandler(object sender, GameSolver.CellLocationEventArgs e)
         {
             _map.GetCellAt(e.Row, e.Col).UpdateState(CellState.Mine);
-            var coordX = MeasurementHelper.GetCoordByCol(e.Col);
-            var coordY = MeasurementHelper.GetCoordByRow(e.Row);
+            var coordX = Coords.ColToCoord(e.Col);
+            var coordY = Coords.RowToCoord(e.Row);
             WinApiHelper.MouseClick(_minesweeperWindow, MouseButton.Right, coordX, coordY);
         }
 
         private void NextCellHasBeenFoundHandler(object sender, GameSolver.CellLocationEventArgs e)
         {
-            var coordX = MeasurementHelper.GetCoordByCol(e.Col);
-            var coordY = MeasurementHelper.GetCoordByRow(e.Row);
+            var coordX = Coords.ColToCoord(e.Col);
+            var coordY = Coords.RowToCoord(e.Row);
             WinApiHelper.MouseClick(_minesweeperWindow, MouseButton.Left, coordX, coordY);
         }
 
@@ -129,59 +152,16 @@ namespace MinesweeperSolver.Domain
             DomainEvents.Raise(new GameIsLost());
         }
 
-        public CellState GetCellState(int row, int col)
+        private CellState GetCellState(int row, int col)
         {
-            var color = WinApiHelper.GetColor(_minesweeperWindow, MeasurementHelper.GetCoordByCol(col), MeasurementHelper.GetCoordByRow(row));
-            if (color.R == 255 && color.G == 0 && color.B == 0)
-            {
-                return CellState.Boom;
-            }
+            var cellState =
+                CellStateDeterminationList
+                    .Where(x => x.Key.Color == WinApiHelper.GetColor(_minesweeperWindow, x.Key.XPointGetter(col), x.Key.YPointGetter(row)))
+                    .Select(x => x.Value)
+                    .Cast<CellState?>()
+                    .FirstOrDefault();
 
-            color = WinApiHelper.GetColor(_minesweeperWindow, MeasurementHelper.GetCoordByCol(col, 7), MeasurementHelper.GetCoordByRow(row, 8));
-            if (color.R == 0 && color.G == 0 && color.B == 255)
-            {
-                return CellState.One;
-            }
-            if (color.R == 0 && color.G == 128 && color.B == 0)
-            {
-                return CellState.Two;
-            }
-
-            color = WinApiHelper.GetColor(_minesweeperWindow, MeasurementHelper.GetCoordByCol(col, 10), MeasurementHelper.GetCoordByRow(row, 8));
-            if (color.R == 255 && color.G == 0 && color.B == 0)
-            {
-                return CellState.Three;
-            }
-            if (color.R == 0 && color.G == 0 && color.B == 128)
-            {
-                return CellState.Four;
-            }
-            if (color.R == 128 && color.B == 0 && color.G == 0)
-            {
-                return CellState.Five;
-            }
-            if (color.R == 0 && color.B == 128 && color.G == 128)
-            {
-                return CellState.Six;
-            }
-            if (color.R == 128 && color.B == 128 && color.G == 128)
-            {
-                return CellState.Eight;
-            }
-
-            color = WinApiHelper.GetColor(_minesweeperWindow, MeasurementHelper.GetCoordByCol(col, 3), MeasurementHelper.GetCoordByRow(row, 2));
-            if (color.R == 0 && color.B == 128 && color.G == 128)
-            {
-                return CellState.Seven;
-            }
-
-            color = WinApiHelper.GetColor(_minesweeperWindow, MeasurementHelper.GetCoordByCol(col), MeasurementHelper.GetCoordByRow(row));
-            if (color.R == 192 && color.G == 192 && color.B == 192)
-            {
-                return CellState.Empty;
-            }
-
-            return CellState.Unknown;
+            return cellState != null ? cellState.Value : CellState.Unknown;
         }
     }
 }

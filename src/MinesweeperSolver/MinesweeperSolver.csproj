@@ -51,12 +51,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\BclExtensions\KeyValueList.cs" />
     <Compile Include="Common\Commands\CommandBase.cs" />
     <Compile Include="Common\Commands\CommandWithOptionsBase.cs" />
     <Compile Include="Common\Constants\AppSettings.cs" />
     <Compile Include="Common\Exceptions\InvalidCommandOptionsException.cs" />
     <Compile Include="Domain\Cell.cs" />
     <Compile Include="Domain\CellState.cs" />
+    <Compile Include="Domain\ColorPoint.cs" />
     <Compile Include="Domain\Events\InvalidOptionsArePassed.cs" />
     <Compile Include="Domain\GameMode.cs" />
     <Compile Include="Domain\GameOptions.cs" />
@@ -87,7 +89,7 @@
     <Compile Include="Domain\Events\UnexpectedErrorOccured.cs" />
     <Compile Include="Common\BclExtensions\EventExtensions.cs" />
     <Compile Include="Common\BclExtensions\LinqExtensions.cs" />
-    <Compile Include="Common\Helpers\MeasurementHelper.cs" />
+    <Compile Include="Common\Helpers\Coords.cs" />
     <Compile Include="Common\Helpers\WinApiHelper.cs" />
     <Compile Include="Domain\Map.cs" />
     <Compile Include="Domain\MinesweeperBot.cs" />
