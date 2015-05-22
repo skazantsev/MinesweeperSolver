@@ -60,6 +60,7 @@
     <Compile Include="Domain\CellState.cs" />
     <Compile Include="Domain\ColorPoint.cs" />
     <Compile Include="Domain\Events\InvalidOptionsArePassed.cs" />
+    <Compile Include="Domain\GameInteractor.cs" />
     <Compile Include="Domain\GameMode.cs" />
     <Compile Include="Domain\GameOptions.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
