@@ -6,6 +6,18 @@ namespace MinesweeperSolver.Domain
 {
     public class GameOptions
     {
+        private static readonly IEnumerable<GameOptions> PredefinedModes;
+
+        static GameOptions()
+        {
+            PredefinedModes = new List<GameOptions>
+            {
+                new GameOptions {Mode = GameMode.Beginner, Height = 9, Width = 9, Mines = 10},
+                new GameOptions {Mode = GameMode.Intermediate, Height = 16, Width = 16, Mines = 40},
+                new GameOptions {Mode = GameMode.Expert, Height = 16, Width = 30, Mines = 99}
+            };
+        }
+
         public GameMode Mode { get; private set; }
 
         public int Height { get; private set; }
@@ -21,23 +33,10 @@ namespace MinesweeperSolver.Domain
 
         public static GameOptions GetPredefined(GameMode mode)
         {
-            var gameOptions = All.FirstOrDefault(x => x.Mode == mode);
+            var gameOptions = PredefinedModes.FirstOrDefault(x => x.Mode == mode);
             if (gameOptions == null)
-                throw new InvalidEnumArgumentException("Mode has not been found among predefined ones.");
+                throw new InvalidEnumArgumentException("The mode has not been found among predefined ones.");
             return gameOptions;
-        }
-
-        public static List<GameOptions> All
-        {
-            get
-            {
-                return new List<GameOptions>
-                {
-                    new GameOptions { Mode = GameMode.Beginner, Height = 9, Width = 9, Mines = 10 },
-                    new GameOptions { Mode = GameMode.Intermediate, Height = 16, Width = 16, Mines = 40 },
-                    new GameOptions { Mode = GameMode.Expert, Height = 16, Width = 30, Mines = 99 }
-                };
-            }
         }
     }
 }
