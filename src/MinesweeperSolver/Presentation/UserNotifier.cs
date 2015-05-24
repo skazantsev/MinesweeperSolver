@@ -11,7 +11,7 @@ namespace MinesweeperSolver.Presentation
 {
     public class UserNotifier :
         IHandleEvent<BotStarted>,
-        IHandleEvent<BotAlreadyStarted>,
+        IHandleEvent<BotIsAlreadyStarted>,
         IHandleEvent<GameCannotBeFound>,
         IHandleEvent<BotStopped>,
         IHandleEvent<BotIsNotStarted>,
@@ -36,7 +36,7 @@ namespace MinesweeperSolver.Presentation
             Console.ResetColor();
         }
 
-        public void Handle(BotAlreadyStarted @event)
+        public void Handle(BotIsAlreadyStarted @event)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("The bot already started. You can stop it using 'stop' command.");

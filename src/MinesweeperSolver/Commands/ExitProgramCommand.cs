@@ -6,7 +6,7 @@ using MinesweeperSolver.Domain.Events;
 
 namespace MinesweeperSolver.Commands
 {
-    public class ExitCommand : CommandBase
+    public class ExitProgramCommand : CommandBase
     {
         public override IEnumerable<string> Aliases
         {

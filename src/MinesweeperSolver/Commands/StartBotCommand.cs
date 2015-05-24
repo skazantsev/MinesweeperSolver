@@ -78,7 +78,7 @@ namespace MinesweeperSolver.Commands
             var minesweeperBot = _botFactory.Get();
             if (minesweeperBot.IsStarted)
             {
-                DomainEvents.Raise(new BotAlreadyStarted());
+                DomainEvents.Raise(new BotIsAlreadyStarted());
                 return;
             }
 

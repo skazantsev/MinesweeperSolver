@@ -63,7 +63,7 @@
     <Compile Include="Domain\GameInteractor.cs" />
     <Compile Include="Domain\GameMode.cs" />
     <Compile Include="Domain\GameOptions.cs" />
-    <Compile Include="Commands\ExitCommand.cs" />
+    <Compile Include="Commands\ExitProgramCommand.cs" />
     <Compile Include="Common\Commands\ICommand.cs" />
     <Compile Include="Commands\StartBotCommand.cs" />
     <Compile Include="Bootstrapper.cs" />
@@ -77,7 +77,7 @@
     <Compile Include="Domain\GameSolver.cs" />
     <Compile Include="Domain\Interfaces\IMinesweeperBotFactory.cs" />
     <Compile Include="Domain\MinesweeperBotFactory.cs" />
-    <Compile Include="Domain\Events\BotAlreadyStarted.cs" />
+    <Compile Include="Domain\Events\BotIsAlreadyStarted.cs" />
     <Compile Include="Domain\Events\BotIsNotStarted.cs" />
     <Compile Include="Domain\Events\BotStarted.cs" />
     <Compile Include="Domain\Events\BotStopped.cs" />

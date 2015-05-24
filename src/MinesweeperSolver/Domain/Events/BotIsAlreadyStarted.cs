@@ -2,7 +2,7 @@
 
 namespace MinesweeperSolver.Domain.Events
 {
-    public class BotAlreadyStarted : IDomainEvent
+    public class BotIsAlreadyStarted : IDomainEvent
     {
     }
 }
