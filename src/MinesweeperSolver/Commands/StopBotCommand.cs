@@ -35,7 +35,7 @@ namespace MinesweeperSolver.Commands
             }
 
             minesweeperBot.Stop();
-            DomainEvents.Raise(new BotIsNotStarted());
+            DomainEvents.Raise(new BotStopped());
         }
     }
 }

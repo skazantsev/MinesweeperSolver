@@ -5,7 +5,6 @@ using System.Text;
 using MinesweeperSolver.Common.Commands;
 using MinesweeperSolver.Common.Events;
 using MinesweeperSolver.Domain.Events;
-using MinesweeperSolver.Events;
 
 namespace MinesweeperSolver.Presentation
 {
