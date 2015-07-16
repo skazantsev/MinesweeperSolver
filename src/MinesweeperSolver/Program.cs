@@ -10,17 +10,17 @@ namespace MinesweeperSolver
 {
     public static class Program
     {
-        private static void KernelInit()
-        {
-            var kernel = new StandardKernel();
-            kernel.Load(AppDomain.CurrentDomain.GetAssemblies()); // dynamic ninject module loading
-            KernelHolder.Initialize(kernel);
-        }
-
         public static void Main()
         {
             KernelInit();
             RunInputHandlingLoop();
+        }
+
+        private static void KernelInit()
+        {
+            var kernel = new StandardKernel();
+            kernel.Load(AppDomain.CurrentDomain.GetAssemblies());
+            KernelHolder.Initialize(kernel);
         }
 
         private static void RunInputHandlingLoop()
