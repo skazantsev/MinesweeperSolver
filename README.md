@@ -5,3 +5,11 @@ Fast Minesweeper solver for Windows XP.
 Minesweeper can be downloaded from here:
 
 http://www.minesweeper.info/downloads/WinmineXP.html
+
+##In action:
+
+![themes structure](https://raw.github.com/skazantsev/MinesweeperSolver/master/images/solver.png)
+
+![themes structure](https://raw.github.com/skazantsev/MinesweeperSolver/master/images/minesweeper.png)
+
+![themes structure](https://raw.github.com/skazantsev/MinesweeperSolver/master/images/scores.png)
