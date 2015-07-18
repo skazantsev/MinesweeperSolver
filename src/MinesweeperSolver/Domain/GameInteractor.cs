@@ -38,6 +38,8 @@ namespace MinesweeperSolver.Domain
 
         private readonly IntPtr _minesweeperWindow;
 
+        private Dictionary<int, Color> _colorsCache;
+
         public GameInteractor(IEnumerable<string> gameWindowNames)
         {
             _minesweeperWindow = GetMinesweeperWindowPtr(gameWindowNames);
@@ -48,16 +50,22 @@ namespace MinesweeperSolver.Domain
             WinApiHelper.PostMessage(_minesweeperWindow, WindowMessages.WM_KEYDOWN, (IntPtr)Keys.F2, IntPtr.Zero);
         }
 
-        public CellState GetCellState(int row, int col)
+        public void UpdateCellStates(IEnumerable<Cell> cells)
         {
-            var cellState =
-                CellStateDeterminationList
-                    .Where(x => x.Key.Color == WinApiHelper.GetColor(_minesweeperWindow, x.Key.XPointGetter(col), x.Key.YPointGetter(row)))
-                    .Select(x => x.Value)
-                    .Cast<CellState?>()
-                    .FirstOrDefault();
-
-            return cellState != null ? cellState.Value : CellState.Unknown;
+            _colorsCache = new Dictionary<int, Color>();
+            var hdc = IntPtr.Zero;
+            try
+            {
+                hdc = WinApiHelper.GetDC(_minesweeperWindow);
+                cells.ForEach(x => UpdateCellState(x, hdc));
+            }
+            finally
+            {
+                if (hdc != IntPtr.Zero)
+                {
+                    WinApiHelper.ReleaseDC(_minesweeperWindow, hdc);
+                }
+            }
         }
 
         public void TickMine(int row, int col)
@@ -80,6 +88,26 @@ namespace MinesweeperSolver.Domain
             }
 
             throw new WindowCannotBeFoundException();
+        }
+
+        private void UpdateCellState(Cell cell, IntPtr hdc)
+        {
+            foreach (var kvp in CellStateDeterminationList)
+            {
+                Color color;
+                var cacheKey = kvp.Key.XPointGetter(cell.Col) * 100 + kvp.Key.YPointGetter(cell.Row);
+                if (!_colorsCache.TryGetValue(cacheKey, out color))
+                {
+                    color = WinApiHelper.GetColor(hdc, kvp.Key.XPointGetter(cell.Col), kvp.Key.YPointGetter(cell.Row));
+                    _colorsCache[cacheKey] = color;
+                }
+
+                if (color != kvp.Key.Color)
+                    continue;
+
+                cell.UpdateState(kvp.Value);
+                break;
+            }
         }
     }
 }

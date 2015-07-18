@@ -44,11 +44,9 @@ namespace MinesweeperSolver.Common.Helpers
             }
         }
 
-        public static Color GetColor(IntPtr hWnd, int x, int y)
+        public static Color GetColor(IntPtr hdc, int x, int y)
         {
-            IntPtr hdc = GetDC(hWnd);
             var pixel = GetPixel(hdc, x, y);
-            ReleaseDC(hWnd, hdc);
             return Color.FromArgb((int)(pixel & 0x000000FF),
                     (int)(pixel & 0x0000FF00) >> 8,
                     (int)(pixel & 0x00FF0000) >> 16);

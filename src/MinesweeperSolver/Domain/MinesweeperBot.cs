@@ -76,9 +76,8 @@ namespace MinesweeperSolver.Domain
 
         private void UpdateMapState()
         {
-            _map.GetCells()
-                .Where(x => x.State == CellState.Unknown)
-                .ForEach(x => x.UpdateState(_gameInteractor.GetCellState(x.Row, x.Col)));
+            var cellsToUpdate = _map.GetCells().Where(x => x.State == CellState.Unknown);
+            _gameInteractor.UpdateCellStates(cellsToUpdate);
         }
 
         private void MineHasBeenFoundHandler(object sender, GameSolver.CellLocationEventArgs e)
