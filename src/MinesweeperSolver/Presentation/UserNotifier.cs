@@ -73,7 +73,7 @@ namespace MinesweeperSolver.Presentation
         public void Handle(GameIsSolved @event)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Yeach! The game is solved.");
+            Console.WriteLine("The game is solved.");
             Console.ResetColor();
         }
 
