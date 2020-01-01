@@ -6,7 +6,7 @@ Minesweeper can be downloaded from here:
 
 http://www.minesweeper.info/downloads/WinmineXP.html
 
-##In action:
+## In action:
 
 ![themes structure](https://raw.github.com/skazantsev/MinesweeperSolver/master/images/solver.png)
 
